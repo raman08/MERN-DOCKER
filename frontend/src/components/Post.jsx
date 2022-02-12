@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material';
 
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
+
 const Post = ({ content }) => {
 	// const url = 'https://source.unsplash.com/random';
 	return (
@@ -37,12 +39,20 @@ const Post = ({ content }) => {
 			>
 				{content.title}
 			</Typography>
-			<Typography sx={{ fontSize: 14, wordBreak: 'break-word' }}>
-				{content.body}
-			</Typography>
-			<Typography sx={{ fontSize: 12, color: '#878787' }}>
-				{content.user}
-			</Typography>
+			{/* <Typography sx={{ fontSize: 14, wordBreak: 'break-word' }}> */}
+			{/* 	{content.body} */}
+			{/* </Typography> */}
+			<Box sx={{ display: 'flex', marginTop: 2 }}>
+				{!content.liked ? (
+					<FavoriteBorder sx={{ marginRight: 1 }} />
+				) : (
+					<Favorite sx={{ marginRight: 1 }} />
+				)}
+
+				<Typography sx={{ fontSize: 12, color: '#878787' }}>
+					{content.likes.length}
+				</Typography>
+			</Box>
 		</Box>
 	);
 };

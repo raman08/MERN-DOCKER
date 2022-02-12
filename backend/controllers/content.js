@@ -53,6 +53,7 @@ exports.createContent = (req, res, next) => {
 			body: body,
 			user: req.userId,
 			image: image,
+			likes: [],
 		});
 
 		content.save();
@@ -103,6 +104,8 @@ exports.getContents = async (req, res, next) => {
 				createdAt: content.createdAt,
 				updateAt: content.updateAt,
 				user: content.user,
+				likes: content.likes,
+				liked: content.likes.includes(req.userId),
 			};
 		});
 		/*
@@ -112,22 +115,25 @@ exports.getContents = async (req, res, next) => {
 					message: 'Contents fetched Sucessfully',
 					user: [
 						{
-						'_id': '223333',
-						'title': 'Title 1',
-						'body': 'Body 1',
-						'image': 'http://some/link',
-						'createdAt': 'Date',
-						'updatedAt': 'Date',
-						'user': 'userId',
+							'_id': '223333',
+							'title': 'Title 1',
+							'body': 'Body 1',
+							'image': 'http://some/link',
+							'createdAt': 'Date',
+							'updatedAt': 'Date',
+							'user': 'userId',
+							'likes': ['fds3lkjl23', '3fkdjsalrfsf'],
+							'liked': false
 						},
 						{
-						'_id': '223333',
-						'title': 'Title 1',
-						'body': 'Body 1',
-						'image': 'http://some/link',
-						'createdAt': 'Date',
-						'updatedAt': 'Date',
-						'user': 'userId',
+							'_id': '223333',
+							'title': 'Title 1',
+							'body': 'Body 1',
+							'image': 'http://some/link',
+							'createdAt': 'Date',
+							'updatedAt': 'Date',
+							'user': 'userId',
+							'likes': ['fds3lkjl23', '3fkdjsalrfsf'],
 						},
 
 					]
@@ -184,6 +190,8 @@ exports.getContent = async (req, res, next) => {
 			createdAt: content.createdAt,
 			updateAt: content.updateAt,
 			user: content.user,
+			likes: content.likes,
+			liked: content.likes.includes(req.userId),
 		};
 
 		/*
@@ -200,6 +208,7 @@ exports.getContent = async (req, res, next) => {
 						'createdAt': 'Date',
 						'updatedAt': 'Date',
 						'user': 'userId',
+						'liked': true,
 						},
 				}
 			}
@@ -462,7 +471,10 @@ exports.bulkloader = async (req, res, next) => {
 				return jsonobj;
 			});
 
-		jsonArray.forEach(ele => (ele['user'] = req.userId));
+		jsonArray.forEach(ele => {
+			ele['user'] = req.userId;
+			ele['likes'] = [];
+		});
 
 		await Content.insertMany(jsonArray);
 
@@ -489,5 +501,83 @@ exports.bulkloader = async (req, res, next) => {
 		*/
 		console.log(err);
 		return res.status(500).json({ message: 'Something went wrong' });
+	}
+};
+
+exports.likeContent = async (req, res, next) => {
+	try {
+		/*
+			#swagger.tags = ['Content']
+			#swagger.summary = 'Given the csv file, upload the data to database'
+			#swagger.security = [{
+				"bearerAuth": []
+			}]
+		*/
+		const contentId = req.params.id;
+		console.log('ContentId: ', contentId);
+
+		const data = await Content.findByIdAndUpdate(contentId, {
+			$push: { likes: req.userId },
+		});
+
+		console.log(data);
+		/*
+			#swagger.responses[200] = {
+				description: 'Likes Added',
+				schema: {
+					message: "Like Sucessfully Added",
+				}
+			}
+		*/
+		return res.status(200).json({ message: 'Like Sucessfully Added' });
+	} catch (err) {
+		console.log(err);
+		/*
+			#swagger.responses[500] = {
+				description: 'User Created',
+				schema: {
+					message: "Something Went Wrong",
+				}
+			}
+		*/
+		return res.status(500).json({ message: 'Something Went Wrong' });
+	}
+};
+
+exports.unlikeContent = async (req, res, next) => {
+	try {
+		/*
+			#swagger.tags = ['Content']
+			#swagger.summary = 'Removed Likes'
+			#swagger.security = [{
+				"bearerAuth": []
+			}]
+		*/
+		const contentId = req.params.id;
+		const data = await Content.findByIdAndUpdate(contentId, {
+			$pull: { likes: req.userId },
+		});
+
+		console.log(data);
+		/*
+			#swagger.responses[200] = {
+				description: 'Unlikes Added',
+				schema: {
+					message: "Unike Sucessfully Added",
+				}
+			}
+		*/
+		return res.status(200).json({ message: 'Unlike Sucessfully Added' });
+	} catch (err) {
+		console.log(err);
+		/*
+			#swagger.responses[500] = {
+				description: 'User Created',
+				schema: {
+					message: "Something Went Wrong",
+				}
+			}
+		*/
+		return res.status(500).json({ message: 'Something Went Wrong' });
 	}
 };

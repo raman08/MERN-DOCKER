@@ -93,3 +93,23 @@ export const userProfile = async token => {
 		console.log(err);
 	}
 };
+
+export const likeContent = async id => {
+	try {
+		const response = await instanse.put(`/content/like/${id}`);
+
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const unlikeContent = async id => {
+	try {
+		const response = await instanse.post(`/content/unlike/${id}`);
+
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};

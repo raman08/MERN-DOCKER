@@ -14,6 +14,7 @@ const contentSchema = new mongoose.Schema(
 			ref: 'User',
 			// default: '62054378916677c65a29d0d1',
 		},
+		likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
 	},
 	{ timestamps: true }
 );

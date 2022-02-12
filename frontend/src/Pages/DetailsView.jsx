@@ -1,13 +1,18 @@
-import { Link, Typography } from '@mui/material';
+import { ButtonBase, Link, Tooltip, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteContent, getSingleContent } from '../service/api';
+import {
+	deleteContent,
+	getSingleContent,
+	likeContent,
+	unlikeContent,
+} from '../service/api';
 
 const DetailsView = ({ isAuth, user }) => {
-	const iconsCss = { float: 'right' };
+	const iconsCss = { float: 'right', display: 'flex' };
 	const iconCss = {
 		margin: 1,
 		border: '1px solid #878787',
@@ -24,7 +29,8 @@ const DetailsView = ({ isAuth, user }) => {
 
 	const navigate = useNavigate();
 	const [content, setContent] = useState({});
-
+	const [liked, setLiked] = useState(false);
+	const [noOfLikes, setNoOfLikes] = useState(0);
 	const { contentId } = useParams();
 
 	useEffect(() => {
@@ -34,6 +40,8 @@ const DetailsView = ({ isAuth, user }) => {
 
 			console.log(response, user);
 			setContent(response.data);
+			setNoOfLikes(response.data.likes.length);
+			setLiked(response.data.liked);
 		};
 
 		getContent(contentId);
@@ -42,6 +50,18 @@ const DetailsView = ({ isAuth, user }) => {
 	const deleteHandler = async id => {
 		await deleteContent(id);
 		navigate('/home');
+	};
+
+	const likeHandler = async id => {
+		await likeContent(id);
+		setNoOfLikes(noOfLikes + 1);
+		setLiked(true);
+	};
+
+	const unlikeHandler = async id => {
+		await unlikeContent(id);
+		setNoOfLikes(noOfLikes - 1);
+		setLiked(false);
 	};
 
 	return (
@@ -57,15 +77,22 @@ const DetailsView = ({ isAuth, user }) => {
 
 			{user.id === content.user && (
 				<Box sx={iconsCss}>
-					<Link
-						href={`/edit/${contentId}`}
-						style={{ textDecoration: 'none' }}
-					>
-						<Edit sx={iconCss} color={'primary'} />
-					</Link>
-					<Delete sx={iconCss} color={'error'} />
+					<Tooltip title="Edit">
+						<Link
+							href={`/edit/${contentId}`}
+							style={{ textDecoration: 'none' }}
+						>
+							<Edit sx={iconCss} color={'primary'} />
+						</Link>
+					</Tooltip>
+					<Tooltip title="Delete">
+						<ButtonBase onClick={() => deleteHandler(contentId)}>
+							<Delete sx={iconCss} color={'error'} />
+						</ButtonBase>
+					</Tooltip>
 				</Box>
 			)}
+
 			<Typography sx={titleCss}>{content.title}</Typography>
 			<Box
 				sx={{
@@ -75,7 +102,19 @@ const DetailsView = ({ isAuth, user }) => {
 					textAlign: 'center',
 				}}
 			>
-				{/* <Typography>{content.user}</Typography> */}
+				{!liked ? (
+					<FavoriteBorder
+						sx={{ marginRight: 1 }}
+						onClick={() => likeHandler(contentId)}
+					/>
+				) : (
+					<Favorite
+						sx={{ marginRight: 1 }}
+						onClick={() => unlikeHandler(contentId)}
+					/>
+				)}
+
+				<Typography>{noOfLikes}</Typography>
 				<Typography sx={{ marginLeft: 'auto' }}>
 					{new Date(content.createdAt).toDateString()}
 				</Typography>

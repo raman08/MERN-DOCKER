@@ -30,4 +30,6 @@ router.post(
 	contentController.bulkloader
 );
 
+router.put('/like/:id', isAuth, contentController.likeContent);
+router.post('/unlike/:id', isAuth, contentController.unlikeContent);
 module.exports = router;

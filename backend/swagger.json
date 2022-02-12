@@ -355,6 +355,16 @@
                       "user": {
                         "type": "string",
                         "example": "userId"
+                      },
+                      "likes": {
+                        "type": "array",
+                        "example": [
+                          "fds3lkjl23",
+                          "3fkdjsalrfsf"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
@@ -454,6 +464,10 @@
                     "user": {
                       "type": "string",
                       "example": "userId"
+                    },
+                    "liked": {
+                      "type": "boolean",
+                      "example": true
                     }
                   }
                 }
@@ -806,7 +820,7 @@
         "tags": [
           "Content"
         ],
-        "summary": "This endpoint will give give information about the active user",
+        "summary": "Insert the banner image and give the link of uploaded image",
         "description": "",
         "consumes": [
           "multipart/form-data"
@@ -893,7 +907,7 @@
         "tags": [
           "Content"
         ],
-        "summary": "This endpoint will give give information about the active user",
+        "summary": "Return the given image",
         "description": "",
         "parameters": [
           {
@@ -901,20 +915,9 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
           "500": {
             "description": "User Created",
             "schema": {
@@ -943,7 +946,7 @@
         "tags": [
           "Content"
         ],
-        "summary": "This endpoint will give give information about the active user",
+        "summary": "Given the csv file, upload the data to database",
         "description": "",
         "consumes": [
           "multipart/form-data"
@@ -973,6 +976,136 @@
                 "message": {
                   "type": "string",
                   "example": "Data Inserted"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "User Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Something Went Wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/content/like/{id}": {
+      "put": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Given the csv file, upload the data to database",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Likes Added",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Like Sucessfully Added"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "User Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Something Went Wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/content/unlike/{id}": {
+      "post": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Removed Likes",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unlikes Added",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Unike Sucessfully Added"
                 }
               },
               "xml": {

@@ -27,8 +27,8 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 mongoose
 	.connect(
-		// 'mongodb+srv://admin:Uk2uZUDTku9z43in@mern-auth-ititech.gusxu.mongodb.net/Pratilipi?retryWrites=true&w=majority',
-		`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@pratilipi-mongo/pratilipi?authSource=admin`,
+		'mongodb+srv://admin:Uk2uZUDTku9z43in@mern-auth-ititech.gusxu.mongodb.net/Pratilipi?retryWrites=true&w=majority',
+		// `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@pratilipi-mongo/pratilipi?authSource=admin`,
 		{
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
