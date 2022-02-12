@@ -6,11 +6,28 @@ const User = require('../models/user');
 const { isAuth } = require('../middleware/auth');
 const contentController = require('../controllers/content');
 
-router.get('/all', contentController.getContents);
-router.get('/:id', contentController.getContent);
-router.post('/create', contentController.createContent);
-router.patch('/edit/:id', contentController.editContent);
+const { upload, csvUpload } = require('../utils/multer');
 
-router.delete('/delete/:id', contentController.deleteContent);
+router.get('/all', isAuth, contentController.getContents);
+router.get('/:id', isAuth, contentController.getContent);
+router.post('/create', isAuth, contentController.createContent);
+router.patch('/edit/:id', isAuth, contentController.editContent);
+
+router.delete('/delete/:id', isAuth, contentController.deleteContent);
+
+router.post(
+	'/file/upload',
+	isAuth,
+	upload.single('file'),
+	contentController.uploadFile
+);
+router.get('/files/:fileName', contentController.getImage);
+
+router.post(
+	'/bulkUpload',
+	isAuth,
+	csvUpload.single('file'),
+	contentController.bulkloader
+);
 
 module.exports = router;

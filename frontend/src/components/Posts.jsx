@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getAllContent } from '../service/api';
+
 const Posts = () => {
 	const [contents, setContents] = useState([]);
 

@@ -56,12 +56,6 @@ router.post(
 
 		return true;
 	}),
-	body('cpassword').custom((value, { req }) => {
-		if (value !== req.body.password) {
-			throw new Error('Password Should Match');
-		}
-		return true;
-	}),
 
 	userController.postsignup
 );

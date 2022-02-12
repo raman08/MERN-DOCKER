@@ -3,7 +3,10 @@ import axios from 'axios';
 const url = 'http://localhost:8000/api';
 const instanse = axios.create({
 	baseURL: url,
-	headers: { 'Content-Type': 'application/json' },
+	headers: {
+		'Content-Type': 'application/json',
+		authorization: `Bearer ${localStorage.getItem('content-authToken')}`,
+	},
 });
 
 export const createContent = async post => {
@@ -46,6 +49,45 @@ export const editContent = async (id, data) => {
 export const deleteContent = async id => {
 	try {
 		const response = await instanse.delete(`/content/delete/${id}`);
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const uploadFile = async data => {
+	try {
+		const response = await instanse.post('/content/file/upload', data);
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const registerUser = async data => {
+	try {
+		const response = await instanse.post('/user/signup', data);
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const loginUser = async data => {
+	try {
+		const response = await instanse.post('/user/login', data);
+		return response.data;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const userProfile = async token => {
+	try {
+		const response = await instanse.get('/user/profile', {
+			headers: { authorization: `Bearer ${token}` },
+		});
+
 		return response.data;
 	} catch (err) {
 		console.log(err);

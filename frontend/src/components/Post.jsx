@@ -32,7 +32,9 @@ const Post = ({ content }) => {
 			<Typography sx={{ fontSize: 12, color: '#878787' }}>
 				{new Date(content.createdAt).toDateString()}
 			</Typography>
-			<Typography sx={{ fontSize: 18, fontWeight: 'bold' }}>
+			<Typography
+				sx={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}
+			>
 				{content.title}
 			</Typography>
 			<Typography sx={{ fontSize: 14, wordBreak: 'break-word' }}>

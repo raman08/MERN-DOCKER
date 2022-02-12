@@ -12,7 +12,7 @@ const contentSchema = new mongoose.Schema(
 		user: {
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
-			default: '62054378916677c65a29d0d1',
+			// default: '62054378916677c65a29d0d1',
 		},
 	},
 	{ timestamps: true }

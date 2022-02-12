@@ -1,9 +1,9 @@
 import Posts from '../components/Posts';
 
-const Home = () => {
+const Home = ({ user }) => {
 	return (
 		<>
-			<Posts />
+			<Posts user={user} />
 		</>
 	);
 };

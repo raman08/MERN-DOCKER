@@ -3,10 +3,10 @@ import { Box } from '@mui/system';
 import { Delete, Edit } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import  {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { deleteContent, getSingleContent } from '../service/api';
 
-const DetailsView = () => {
+const DetailsView = ({ isAuth, user }) => {
 	const iconsCss = { float: 'right' };
 	const iconCss = {
 		margin: 1,
@@ -22,16 +22,17 @@ const DetailsView = () => {
 		margin: '50px 0 10px 0',
 	};
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [content, setContent] = useState({});
 
 	const { contentId } = useParams();
+
 	useEffect(() => {
 		console.log('UseEffectd Called');
 		const getContent = async contentId => {
 			const response = await getSingleContent(contentId);
 
-			console.log(response);
+			console.log(response, user);
 			setContent(response.data);
 		};
 
@@ -40,8 +41,9 @@ const DetailsView = () => {
 
 	const deleteHandler = async id => {
 		await deleteContent(id);
-		navigate('/');
+		navigate('/home');
 	};
+
 	return (
 		<Box sx={{ padding: { xd: '0px 10px', md: '0px 100px' } }}>
 			<img
@@ -53,22 +55,18 @@ const DetailsView = () => {
 				style={bannerCss}
 			/>
 
-			<Box sx={iconsCss}>
-				<Link
-					href={`/edit/${contentId}`}
-					style={{ textDecoration: 'none' }}
-				>
-					<Edit sx={iconCss} color={'primary'} />
-				</Link>
-				<Delete
-					onClick={() => deleteHandler(contentId)}
-					sx={iconCss}
-					color={'error'}
-				/>
-			</Box>
-
+			{user.id === content.user && (
+				<Box sx={iconsCss}>
+					<Link
+						href={`/edit/${contentId}`}
+						style={{ textDecoration: 'none' }}
+					>
+						<Edit sx={iconCss} color={'primary'} />
+					</Link>
+					<Delete sx={iconCss} color={'error'} />
+				</Box>
+			)}
 			<Typography sx={titleCss}>{content.title}</Typography>
-
 			<Box
 				sx={{
 					color: '#878787',
@@ -77,12 +75,11 @@ const DetailsView = () => {
 					textAlign: 'center',
 				}}
 			>
-				<Typography>{content.user}</Typography>
+				{/* <Typography>{content.user}</Typography> */}
 				<Typography sx={{ marginLeft: 'auto' }}>
 					{new Date(content.createdAt).toDateString()}
 				</Typography>
 			</Box>
-
 			<Typography>{content.body}</Typography>
 		</Box>
 	);

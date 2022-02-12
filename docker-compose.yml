@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+    mongodb:
+        image: 'mongo'
+        container_name: pratilipi-mongo
+        volumes:
+            - data:/data/db
+        env_file:
+            - ./env/mongo.env
+    server:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        container_name: pratilipi-backend
+        ports:
+            - '8000:8000'
+        volumes:
+            - ./backend:/app
+            - /app/node_modules
+            - logs:/app/logs
+        env_file:
+            - ./env/server.env
+        depends_on:
+            - mongodb
+    client:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        container_name: pratilipi-frontend
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./frontend/src:/app/src
+        stdin_open: true
+        tty: true
+        depends_on:
+            - server
+volumes:
+    data:
+    logs:
